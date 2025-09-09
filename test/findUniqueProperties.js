@@ -54,4 +54,17 @@ QUnit.module("Тестируем функцию findUniqueProperties", function(
 
         assert.deepEqual(result, {}, "Пустой объект должен вернуть пустой объект")
     });
+
+    QUnit.test("Работает правильно для невалидных входных данных", function(assert) {
+        assert.throws(() => findUniqueProperties(123), Error, "Число должно вызывать ошибку");
+        assert.throws(() => findUniqueProperties(null), Error, "Null должен вызывать ошибку");
+        assert.throws(() => findUniqueProperties([1, 2, 3]), Error, "Массив должен вызывать ошибку");
+        assert.throws(() => findUniqueProperties("string"), Error, "Строка должна вызывать ошибку");
+    });
+
+    QUnit.test("Работает правильно для пустого вызова", function(assert) {
+        assert.deepEqual(findUniqueProperties(), {}, "Вызов без аргументов должен вернуть пустой объект");
+    });
 });
+
+

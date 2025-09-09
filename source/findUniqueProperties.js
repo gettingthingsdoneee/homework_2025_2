@@ -15,24 +15,32 @@
  * @returns {Object} - объект с уникальными properties
  */
 const findUniqueProperties = (...objects) => {
+    if (objects.length === 0) {
+        return {}
+    }
+
+    objects.forEach(obj => {
+        if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+            throw new Error(`Invalid input: ${obj}`);
+        }
+    });
+
     const result = {};
-    const keyCounts = {};
+    const keyCounts = new Map(); 
     
     objects.forEach(obj => {
-        Object.keys(obj).forEach(key => {
-            if (keyCounts[key] === undefined) {
-                keyCounts[key] = 0;
-            }
-
-            keyCounts[key] += 1;
-
-            if (keyCounts[key] === 1) { 
-                result[key] = obj[key];
-            } else if (keyCounts[key] === 2) {
+        Object.entries(obj).forEach(([key, value]) => {
+            const currentCount = keyCounts.get(key) || 0;
+            const newCount = currentCount + 1;
+            keyCounts.set(key, newCount);
+            
+            if (newCount === 1) {
+                result[key] = value;
+            } else if (newCount === 2) {
                 delete result[key];
-            } 
-        })
+            }
+        });
     });
     
     return result;
-}    
+};
